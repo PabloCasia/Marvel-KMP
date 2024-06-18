@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="character_list_screen">Character List</string>
+    <string name="character_detail_screen">Character Detail</string>
+</resources>
