@@ -1,5 +1,7 @@
 package utils
 
+import getMarvelPrivateKey
+import getMarvelPublicKey
 import io.ktor.client.request.HttpRequestBuilder
 import io.ktor.client.request.parameter
 import io.ktor.utils.io.core.toByteArray
@@ -16,7 +18,7 @@ private fun md5Digest(toByteArray: ByteArray): String {
 
 fun HttpRequestBuilder.authorized() {
     val ts = Clock.System.now().epochSeconds.toString()
-    val hash = md5Digest("$ts$marvelPrivateApiKey$marvelPublicApiKey".toByteArray())
+    val hash = md5Digest("$ts${getMarvelPrivateKey()}${getMarvelPublicKey()}".toByteArray())
     parameter("ts", ts)
     parameter("hash", hash)
 }

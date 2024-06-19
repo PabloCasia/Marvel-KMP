@@ -1,5 +1,8 @@
+import com.codingfeline.buildkonfig.compiler.FieldSpec.Type.STRING
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import java.io.FileInputStream
+import java.util.Properties
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
@@ -7,6 +10,22 @@ plugins {
     alias(libs.plugins.jetbrainsCompose)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.kotlinSerialization)
+    alias(libs.plugins.buildKonfig)
+}
+
+val localProperties = Properties().apply {
+    FileInputStream(rootProject.file("local.properties")).use { load(it) }
+}
+
+val marvelPublicKey = localProperties.getProperty("MARVEL_PUBLIC_KEY") ?: "unknown"
+val marvelPrivateKey = localProperties.getProperty("MARVEL_PRIVATE_KEY") ?: "unknown"
+
+buildkonfig {
+    packageName = "com.sngular.marvelkmp"
+    defaultConfigs {
+        buildConfigField(STRING, "MARVEL_PUBLIC_KEY", marvelPublicKey)
+        buildConfigField(STRING, "MARVEL_PRIVATE_KEY", marvelPrivateKey)
+    }
 }
 
 kotlin {
@@ -16,7 +35,7 @@ kotlin {
             jvmTarget.set(JvmTarget.JVM_11)
         }
     }
-    
+
     listOf(
         iosX64(),
         iosArm64(),
@@ -99,4 +118,3 @@ android {
         debugImplementation(compose.uiTooling)
     }
 }
-
