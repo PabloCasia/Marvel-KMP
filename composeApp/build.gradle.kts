@@ -69,6 +69,8 @@ kotlin {
             implementation(libs.okio)
             implementation(libs.kotlin.crypto)
             implementation(libs.cupertino)
+            implementation(libs.voyager.navigator)
+            implementation(libs.voyager.transitions)
         }
         androidMain.dependencies {
             implementation(compose.preview)

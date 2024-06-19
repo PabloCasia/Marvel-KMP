@@ -7,4 +7,5 @@ data class Character(
     val name: String,
     val description: String?,
     val thumbnail: Url,
+    val comicsSize: Int,
 )

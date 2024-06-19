@@ -22,6 +22,7 @@ fun CharacterDto.toCharacter() = Character(
     name = name,
     description = description,
     thumbnail = thumbnail.toUrl(),
+    comicsSize = comics?.items?.size ?: 0,
 )
 
 fun MarvelImageDto.toUrl(): Url {
