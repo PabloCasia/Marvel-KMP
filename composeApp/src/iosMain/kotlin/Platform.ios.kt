@@ -10,7 +10,6 @@ import io.ktor.client.plugins.logging.SIMPLE
 import io.ktor.http.URLProtocol
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
-import utils.marvelPublicApiKey
 
 actual fun isAndroid(): Boolean = false
 
@@ -36,8 +35,16 @@ actual fun getHttpClient(): HttpClient {
             url {
                 host = "gateway.marvel.com"
                 protocol = URLProtocol.HTTPS
-                parameters.append("apikey", marvelPublicApiKey)
+                parameters.append("apikey", getMarvelPublicKey())
             }
         }
     }
+}
+
+actual fun getMarvelPublicKey(): String {
+    return com.sngular.marvelkmp.BuildKonfig.MARVEL_PUBLIC_KEY
+}
+
+actual fun getMarvelPrivateKey(): String {
+    return com.sngular.marvelkmp.BuildKonfig.MARVEL_PRIVATE_KEY
 }
