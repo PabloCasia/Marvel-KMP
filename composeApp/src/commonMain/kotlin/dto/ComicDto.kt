@@ -6,8 +6,12 @@ import kotlinx.serialization.Serializable
 data class ComicDto(
     val id: Int,
     val title: String,
-    val description: String?,
-    val isbn: String,
+    val dates: List<DateDto>?,
     val thumbnail: MarvelImageDto,
-    val images: List<MarvelImageDto>,
+)
+
+@Serializable
+data class DateDto(
+    val date: String,
+    val type: String
 )

@@ -47,7 +47,7 @@ fun CharacterCard(
                     resource = asyncPainterResource(data = image),
                     contentDescription = null,
                     modifier = Modifier.fillMaxSize(),
-                    contentScale = ContentScale.Crop,
+                    contentScale = ContentScale.Fit,
                 )
             }
             ListItem(

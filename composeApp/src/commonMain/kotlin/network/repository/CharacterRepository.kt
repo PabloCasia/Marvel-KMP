@@ -34,7 +34,7 @@ internal class CharacterRepositoryImpl(private val httpClient: HttpClient) : Cha
         return toResultFlow {
             val response = httpClient.get {
                 url {
-                    path("v1/public/character/${characterId}")
+                    path("v1/public/characters/${characterId}")
                     authorized()
                 }
             }.body<MarvelApiResponse<CharacterDto>>()
