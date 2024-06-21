@@ -19,30 +19,39 @@ class CharacterListScreen : Screen {
         val navigator = LocalNavigator.current
         val viewModel: CharacterListViewModel = getKoin().get()
         val comicListScreenState by viewModel.characterListViewState.collectAsState()
+        val isLoading by viewModel.isLoading.collectAsState()
         LaunchedEffect(Unit) {
-            viewModel.getCharacters()
+            viewModel.getCharacters(0, 20)
         }
         when (comicListScreenState) {
-            is CharacterListViewModel.CharacterListScreenState.Loading -> {
+            is CharacterListViewModel.CharacterListScreenState.Initial -> {
                 ProgressIndicator()
             }
 
             is CharacterListViewModel.CharacterListScreenState.Success -> {
                 val characters =
                     (comicListScreenState as CharacterListViewModel.CharacterListScreenState.Success).responseData.data.results
-                CharacterList(characters.map { it.toCharacter() }) { id ->
-                    navigator?.push(CharacterDetailScreen(id))
-                }
+                CharacterList(
+                    characters = characters.map { it.toCharacter() },
+                    onCharacterClick = { id -> navigator?.push(CharacterDetailScreen(id)) },
+                    loadMoreItems = { index ->
+                        if (index == characters.size - 1) {
+                            viewModel.getCharacters(index + 1, 20)
+                        }
+                    },
+                    isLoading = isLoading)
             }
 
             is CharacterListViewModel.CharacterListScreenState.Error -> {
                 ErrorView(
                     text = (comicListScreenState as CharacterListViewModel.CharacterListScreenState.Error).errorMessage,
                     onClick = {
-                        // do something
+                        viewModel.getCharacters(0, 20)
                     }
                 )
             }
+
+
         }
 
     }

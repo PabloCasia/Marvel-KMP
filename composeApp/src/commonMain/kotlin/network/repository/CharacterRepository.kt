@@ -12,17 +12,25 @@ import network.toResultFlow
 import utils.authorized
 
 interface CharacterRepository {
-    suspend fun fetchCharacters(): Flow<NetworkResult<MarvelApiResponse<CharacterDto>?>>
+    suspend fun fetchCharacters(
+        offset: Int,
+        limit: Int,
+    ): Flow<NetworkResult<MarvelApiResponse<CharacterDto>?>>
 
     suspend fun fetchCharacter(characterId: Int): Flow<NetworkResult<MarvelApiResponse<CharacterDto>?>>
 }
 
 internal class CharacterRepositoryImpl(private val httpClient: HttpClient) : CharacterRepository {
-    override suspend fun fetchCharacters(): Flow<NetworkResult<MarvelApiResponse<CharacterDto>?>> {
+    override suspend fun fetchCharacters(
+        offset: Int,
+        limit: Int
+    ): Flow<NetworkResult<MarvelApiResponse<CharacterDto>?>> {
         return toResultFlow {
             val response = httpClient.get {
                 url {
                     path("v1/public/characters")
+                    parameters.append("offset", offset.toString())
+                    parameters.append("limit", limit.toString())
                     authorized()
                 }
             }.body<MarvelApiResponse<CharacterDto>>()

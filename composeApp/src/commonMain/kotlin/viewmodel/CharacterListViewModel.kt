@@ -2,14 +2,11 @@ package viewmodel
 
 import dto.CharacterDto
 import dto.MarvelApiResponse
-import dto.MarvelApiResponseDataContainer
-import dto.MarvelImageDto
-import io.ktor.http.Url
-import isAndroid
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -20,45 +17,54 @@ class CharacterListViewModel(private val characterRepository: CharacterRepositor
 
     private val _characterListState = MutableStateFlow(CharacterListState())
     private val _characterListViewState: MutableStateFlow<CharacterListScreenState> =
-        MutableStateFlow(CharacterListScreenState.Loading)
+        MutableStateFlow(CharacterListScreenState.Initial)
     val characterListViewState = _characterListViewState.asStateFlow()
 
-    suspend fun getCharacters() {
+    private val _isLoading = MutableStateFlow(false)
+    val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
+
+    fun getCharacters(offset: Int, limit: Int) {
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                characterRepository.fetchCharacters().collect { response ->
+                characterRepository.fetchCharacters(offset, limit).collect { response ->
                     when (response.status) {
                         ApiStatus.LOADING -> {
-                            _characterListState.update { it.copy(isLoading = true) }
+                            _isLoading.value = true
                         }
 
                         ApiStatus.SUCCESS -> {
-                            _characterListState.update {
-                                it.copy(
-                                    isLoading = false,
+                            _characterListState.update { currentState ->
+                                val oldData =
+                                    currentState.responseData?.data?.results ?: emptyList()
+                                val newData = response.data?.data?.results ?: emptyList()
+                                val combinedData = oldData + newData
+                                val combinedResponse =
+                                    response.data?.copy(data = response.data.data.copy(results = combinedData))
+                                currentState.copy(
                                     errorMessage = "",
-                                    responseData = response.data
+                                    responseData = combinedResponse
                                 )
                             }
+                            _isLoading.value = false
                         }
 
                         ApiStatus.ERROR -> {
                             _characterListState.update {
                                 it.copy(
-                                    isLoading = false,
                                     errorMessage = response.message
                                 )
                             }
+                            _isLoading.value = false
                         }
                     }
                 }
             } catch (e: Exception) {
                 _characterListState.update {
                     it.copy(
-                        isLoading = false,
                         errorMessage = "Failed to fetch data"
                     )
                 }
+                _isLoading.value = false
             } finally {
                 _characterListViewState.value = _characterListState.value.toUiState()
             }
@@ -66,21 +72,18 @@ class CharacterListViewModel(private val characterRepository: CharacterRepositor
     }
 
     sealed class CharacterListScreenState {
-        data object Loading : CharacterListScreenState()
+        data object Initial : CharacterListScreenState()
         data class Error(val errorMessage: String) : CharacterListScreenState()
         data class Success(val responseData: MarvelApiResponse<CharacterDto>) :
             CharacterListScreenState()
     }
 
     private data class CharacterListState(
-        val isLoading: Boolean = false,
         val errorMessage: String? = null,
         val responseData: MarvelApiResponse<CharacterDto>? = null
     ) {
         fun toUiState(): CharacterListScreenState {
-            return if (isLoading) {
-                CharacterListScreenState.Loading
-            } else if (errorMessage?.isNotEmpty() == true) {
+            return if (errorMessage?.isNotEmpty() == true) {
                 CharacterListScreenState.Error(errorMessage)
             } else {
                 CharacterListScreenState.Success(responseData!!)
