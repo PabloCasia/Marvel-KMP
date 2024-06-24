@@ -13,14 +13,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.ListItem
-import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
-import androidx.compose.material.TopAppBar
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -28,6 +28,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import model.Character
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CharacterList(
     characters: List<Character>,
@@ -40,15 +41,15 @@ fun CharacterList(
     Scaffold(
         topBar = {
             TopAppBar(
-                contentColor = Color.Black,
-                backgroundColor = Color.White,
                 title = {
                     Text(
-                        "Sngular Marvel",
+                        text = "Sngular Marvel",
                         maxLines = 1,
+                        color = Color.Black
                     )
                 },
             )
+
         },
     ) { innerPadding ->
         LazyVerticalGrid(
@@ -82,7 +83,6 @@ fun CharacterList(
     }
 }
 
-@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun CharacterSkeleton() {
     Card(
@@ -104,8 +104,12 @@ fun CharacterSkeleton() {
                 Box(Modifier.fillMaxSize().background(Color.Gray))
             }
             ListItem(
-                text = { Box(Modifier.background(Color.Gray).height(20.dp).fillMaxWidth()) },
-                secondaryText = {
+                headlineContent = {
+                    Box(
+                        Modifier.background(Color.Gray).height(20.dp).fillMaxWidth()
+                    )
+                },
+                leadingContent = {
                     Box(
                         Modifier.background(Color.Gray).height(20.dp).fillMaxWidth()
                     )

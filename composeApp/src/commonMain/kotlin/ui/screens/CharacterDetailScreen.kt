@@ -12,10 +12,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.ListItem
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.MaterialTheme.typography
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Card
@@ -24,6 +20,9 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.ListItem
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -139,7 +138,7 @@ fun DetailContent(
                     Text(
                         text = character.name,
                         modifier = Modifier.padding(8.dp),
-                        style = typography.h5,
+                        style = typography.bodyLarge,
                     )
                 }
                 if (!character.description.isNullOrEmpty()) {
@@ -147,7 +146,7 @@ fun DetailContent(
                         Text(
                             text = character.description,
                             modifier = Modifier.padding(8.dp),
-                            style = typography.body1
+                            style = typography.bodyMedium
                         )
                     }
                 }
@@ -183,7 +182,7 @@ fun ComicItem(comic: Comic) {
             comic.title.let {
                 Text(
                     text = it,
-                    style = typography.h6,
+                    style = typography.bodyLarge,
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis
                 )
@@ -192,7 +191,7 @@ fun ComicItem(comic: Comic) {
             comic.date?.let {
                 Text(
                     text = it,
-                    style = typography.body2,
+                    style = typography.bodyMedium,
                     color = Color.Gray
                 )
             }
@@ -211,7 +210,7 @@ fun ComicItem(comic: Comic) {
     }
 }
 
-@OptIn(ExperimentalMaterialApi::class)
+
 @Composable
 fun ComicSkeleton() {
     Card(
@@ -233,8 +232,12 @@ fun ComicSkeleton() {
                 Box(Modifier.fillMaxSize().background(Color.Gray))
             }
             ListItem(
-                text = { Box(Modifier.background(Color.Gray).height(20.dp).fillMaxWidth()) },
-                secondaryText = {
+                headlineContent = {
+                    Box(
+                        Modifier.background(Color.Gray).height(20.dp).fillMaxWidth()
+                    )
+                },
+                leadingContent = {
                     Box(
                         Modifier.background(Color.Gray).height(20.dp).fillMaxWidth()
                     )

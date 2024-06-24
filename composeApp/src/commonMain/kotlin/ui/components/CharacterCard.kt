@@ -5,11 +5,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.Card
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.ListItem
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ListItem
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -19,7 +19,6 @@ import io.kamel.image.KamelImage
 import io.kamel.image.asyncPainterResource
 import io.ktor.http.Url
 
-@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun CharacterCard(
     name: String,
@@ -34,7 +33,9 @@ fun CharacterCard(
             .clickable { onCardClick(id.toInt()) }
             .padding(8.dp),
         shape = MaterialTheme.shapes.medium,
-        elevation = 5.dp
+        elevation = CardDefaults.cardElevation(
+            defaultElevation = 8.dp
+        ),
     ) {
         Column {
             Box(
@@ -51,8 +52,8 @@ fun CharacterCard(
                 )
             }
             ListItem(
-                text = { Text(name) },
-                secondaryText = { Text("Comics: $comicsSize") }
+                headlineContent = { Text(name) },
+                supportingContent = { Text("Comics: $comicsSize") }
             )
         }
     }
