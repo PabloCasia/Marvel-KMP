@@ -1,6 +1,7 @@
 package ui.screens
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -10,7 +11,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.ListItem
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.MaterialTheme.typography
 import androidx.compose.material.icons.Icons
@@ -82,7 +85,9 @@ class CharacterDetailScreen(
                         character,
                         characterDetailState.comics.map {
                             it.toComic()
-                        }, navigator
+                        },
+                        navigator,
+                        viewModel
                     )
                 }
             }
@@ -95,7 +100,8 @@ class CharacterDetailScreen(
 fun DetailContent(
     character: Character,
     comics: List<Comic>,
-    navigator: Navigator?
+    navigator: Navigator?,
+    viewModel: CharacterDetailViewModel
 ) {
     Scaffold(
         topBar = {
@@ -145,9 +151,18 @@ fun DetailContent(
                         )
                     }
                 }
-                items(comics) { comic ->
+                itemsIndexed(comics) { index, comic ->
                     ComicItem(comic)
+                    if (index == comics.size - 1 && viewModel.state.value.hasMoreComics) {
+                        LaunchedEffect(Unit) {
+                            viewModel.loadMoreComics(character.id)
+                        }
+                    }
                 }
+                if (viewModel.state.value.hasMoreComics && comics.isNotEmpty()) {
+                    item { ComicSkeleton() }
+                }
+
             }
         }
     )
@@ -192,6 +207,39 @@ fun ComicItem(comic: Comic) {
                     contentScale = ContentScale.Fit,
                 )
             }
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterialApi::class)
+@Composable
+fun ComicSkeleton() {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(8.dp),
+        shape = MaterialTheme.shapes.medium,
+        elevation = CardDefaults.cardElevation(
+            defaultElevation = 8.dp
+        ),
+    ) {
+        Column(modifier = Modifier.padding(16.dp)) {
+            Box(
+                modifier = Modifier
+                    .height(200.dp)
+                    .fillMaxWidth(),
+                contentAlignment = Alignment.Center
+            ) {
+                Box(Modifier.fillMaxSize().background(Color.Gray))
+            }
+            ListItem(
+                text = { Box(Modifier.background(Color.Gray).height(20.dp).fillMaxWidth()) },
+                secondaryText = {
+                    Box(
+                        Modifier.background(Color.Gray).height(20.dp).fillMaxWidth()
+                    )
+                }
+            )
         }
     }
 }
