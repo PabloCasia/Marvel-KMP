@@ -37,9 +37,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import cafe.adriel.voyager.core.screen.Screen
-import cafe.adriel.voyager.navigator.LocalNavigator
-import cafe.adriel.voyager.navigator.Navigator
 import io.kamel.image.KamelImage
 import io.kamel.image.asyncPainterResource
 import marveldemo.composeapp.generated.resources.Res
@@ -54,58 +51,56 @@ import org.koin.compose.getKoin
 import ui.components.ErrorView
 import viewmodel.CharacterDetailViewModel
 
-class CharacterDetailScreen(
-    private val characterId: Int,
-) : Screen {
-
-    @Composable
-    override fun Content() {
-        val navigator = LocalNavigator.current
-        val viewModel: CharacterDetailViewModel = getKoin().get()
-        val characterDetailState by viewModel.state.collectAsState()
-        LaunchedEffect(Unit) {
-            viewModel.getCharacterDetail(characterId)
+@Composable
+fun CharacterDetailScreen(
+    characterId: Int,
+    onBackClick: () -> Unit
+) {
+    val viewModel: CharacterDetailViewModel = getKoin().get()
+    val characterDetailState by viewModel.state.collectAsState()
+    LaunchedEffect(Unit) {
+        viewModel.getCharacterDetail(characterId)
+    }
+    when {
+        characterDetailState.isLoading -> {
+            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                CircularProgressIndicator()
+            }
         }
-        when {
-            characterDetailState.isLoading -> {
-                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    CircularProgressIndicator()
-                }
-            }
 
-            characterDetailState.error != null -> {
-                ErrorView(
-                    text = characterDetailState.error!!,
-                    onClick = {
-                        viewModel.getCharacterDetail(characterId)
-                    }
+        characterDetailState.error != null -> {
+            ErrorView(
+                text = characterDetailState.error!!,
+                onClick = {
+                    viewModel.getCharacterDetail(characterId)
+                }
+            )
+        }
+
+        else -> {
+            val character = characterDetailState.character?.toCharacter()
+            if (character != null) {
+                DetailContent(
+                    character,
+                    characterDetailState.comics.map {
+                        it.toComic()
+                    },
+                    viewModel,
+                    onBackClick
                 )
-            }
-
-            else -> {
-                val character = characterDetailState.character?.toCharacter()
-                if (character != null) {
-                    DetailContent(
-                        character,
-                        characterDetailState.comics.map {
-                            it.toComic()
-                        },
-                        navigator,
-                        viewModel
-                    )
-                }
             }
         }
     }
 }
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DetailContent(
     character: Character,
     comics: List<Comic>,
-    navigator: Navigator?,
-    viewModel: CharacterDetailViewModel
+    viewModel: CharacterDetailViewModel,
+    onBackClick: () -> Unit
 ) {
     Scaffold(
         topBar = {
@@ -113,7 +108,7 @@ fun DetailContent(
                 title = { Text(text = stringResource(Res.string.character_detail_screen)) },
                 navigationIcon = {
                     IconButton(onClick = {
-                        navigator?.pop()
+                        onBackClick.invoke()
                     }) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
@@ -184,14 +179,12 @@ fun ComicItem(comic: Comic) {
         ),
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
-            comic.title.let {
-                Text(
-                    text = it,
-                    style = typography.bodyLarge,
-                    maxLines = 2,
-                    overflow = TextOverflow.Ellipsis
-                )
-            }
+            Text(
+                text = comic.title,
+                style = typography.bodyLarge,
+                maxLines = 2,
+                overflow = TextOverflow.Ellipsis
+            )
             Spacer(modifier = Modifier.height(8.dp))
             comic.date?.let {
                 Text(
