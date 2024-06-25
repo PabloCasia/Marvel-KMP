@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -41,10 +42,14 @@ import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.Navigator
 import io.kamel.image.KamelImage
 import io.kamel.image.asyncPainterResource
+import marveldemo.composeapp.generated.resources.Res
+import marveldemo.composeapp.generated.resources.back
+import marveldemo.composeapp.generated.resources.character_detail_screen
 import model.Character
 import model.Comic
 import model.mappers.toCharacter
 import model.mappers.toComic
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.getKoin
 import ui.components.ErrorView
 import viewmodel.CharacterDetailViewModel
@@ -105,14 +110,14 @@ fun DetailContent(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(text = "Character Detail") },
+                title = { Text(text = stringResource(Res.string.character_detail_screen)) },
                 navigationIcon = {
                     IconButton(onClick = {
                         navigator?.pop()
                     }) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Back"
+                            contentDescription = stringResource(Res.string.back)
                         )
                     }
                 }
@@ -129,8 +134,8 @@ fun DetailContent(
                         resource = asyncPainterResource(data = character.thumbnail),
                         contentDescription = character.name,
                         modifier = Modifier
-                            .height(200.dp)
-                            .fillMaxWidth(),
+                            .fillMaxWidth()
+                            .aspectRatio(16f / 9f),
                         contentScale = ContentScale.FillBounds,
                     )
                 }

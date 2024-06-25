@@ -2,4 +2,7 @@
 <resources>
     <string name="character_list_screen">Character List</string>
     <string name="character_detail_screen">Character Detail</string>
+    <string name="number_of_comics">Number of Comics:</string>
+    <string name="retry">Retry</string>
+    <string name="back">Back</string>
 </resources>

@@ -15,6 +15,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import marveldemo.composeapp.generated.resources.Res
+import marveldemo.composeapp.generated.resources.retry
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun ErrorView(text: String, onClick: () -> Unit) {
@@ -40,7 +43,7 @@ fun ErrorView(text: String, onClick: () -> Unit) {
             onClick = onClick,
             modifier = Modifier.padding(16.dp),
         ) {
-            Text(text = "Retry")
+            Text(text = stringResource(Res.string.retry))
         }
     }
 }

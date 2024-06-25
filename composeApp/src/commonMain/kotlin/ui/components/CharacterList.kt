@@ -26,7 +26,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import marveldemo.composeapp.generated.resources.Res
+import marveldemo.composeapp.generated.resources.character_list_screen
 import model.Character
+import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -43,7 +46,7 @@ fun CharacterList(
             TopAppBar(
                 title = {
                     Text(
-                        text = "Sngular Marvel",
+                        text = stringResource(Res.string.character_list_screen),
                         maxLines = 1,
                         color = Color.Black
                     )

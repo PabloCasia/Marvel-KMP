@@ -1,5 +1,8 @@
 package ui
 
+import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.material3.darkColorScheme
+import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import determineTheme
 import io.github.alexzhirkevich.cupertino.adaptive.AdaptiveTheme
@@ -12,11 +15,17 @@ import io.github.alexzhirkevich.cupertino.adaptive.Theme
 @Composable
 fun AppTheme(
     theme: Theme = determineTheme(),
-    content: @Composable () -> Unit
+    content: @Composable () -> Unit,
 ) {
+    val isDarkMOde = isSystemInDarkTheme()
+    val colorScheme = if (isDarkMOde) {
+        darkColorScheme()
+    } else {
+        lightColorScheme()
+    }
     AdaptiveTheme(
         target = theme,
-        material = MaterialThemeSpec.Default(),
+        material = MaterialThemeSpec(colorScheme = colorScheme),
         cupertino = CupertinoThemeSpec.Default(),
         content = content
     )

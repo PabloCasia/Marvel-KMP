@@ -18,6 +18,9 @@ import androidx.compose.ui.unit.dp
 import io.kamel.image.KamelImage
 import io.kamel.image.asyncPainterResource
 import io.ktor.http.Url
+import marveldemo.composeapp.generated.resources.Res
+import marveldemo.composeapp.generated.resources.number_of_comics
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun CharacterCard(
@@ -53,7 +56,12 @@ fun CharacterCard(
             }
             ListItem(
                 headlineContent = { Text(name) },
-                supportingContent = { Text("Comics: $comicsSize") }
+                supportingContent = {
+                    Text(
+                        "${stringResource(Res.string.number_of_comics)}: " +
+                                "$comicsSize"
+                    )
+                }
             )
         }
     }
