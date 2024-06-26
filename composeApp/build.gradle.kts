@@ -13,14 +13,14 @@ plugins {
     alias(libs.plugins.buildKonfig)
 }
 
-val localProperties = Properties().apply {
-    FileInputStream(rootProject.file("local.properties")).use { load(it) }
-}
-
-val marvelPublicKey = localProperties.getProperty("MARVEL_PUBLIC_KEY") ?: "unknown"
-val marvelPrivateKey = localProperties.getProperty("MARVEL_PRIVATE_KEY") ?: "unknown"
-
 buildkonfig {
+    val localProperties = Properties().apply {
+        FileInputStream(rootProject.file("local.properties")).use { load(it) }
+    }
+
+    val marvelPublicKey = localProperties.getProperty("MARVEL_PUBLIC_KEY") ?: "unknown"
+    val marvelPrivateKey = localProperties.getProperty("MARVEL_PRIVATE_KEY") ?: "unknown"
+
     packageName = "com.sngular.marvelkmp"
     defaultConfigs {
         buildConfigField(STRING, "MARVEL_PUBLIC_KEY", marvelPublicKey)
