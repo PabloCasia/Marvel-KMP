@@ -13,14 +13,14 @@ plugins {
     alias(libs.plugins.buildKonfig)
 }
 
-val localProperties = Properties().apply {
-    FileInputStream(rootProject.file("local.properties")).use { load(it) }
-}
-
-val marvelPublicKey = localProperties.getProperty("MARVEL_PUBLIC_KEY") ?: "unknown"
-val marvelPrivateKey = localProperties.getProperty("MARVEL_PRIVATE_KEY") ?: "unknown"
-
 buildkonfig {
+    val localProperties = Properties().apply {
+        FileInputStream(rootProject.file("local.properties")).use { load(it) }
+    }
+
+    val marvelPublicKey = localProperties.getProperty("MARVEL_PUBLIC_KEY") ?: "unknown"
+    val marvelPrivateKey = localProperties.getProperty("MARVEL_PRIVATE_KEY") ?: "unknown"
+
     packageName = "com.sngular.marvelkmp"
     defaultConfigs {
         buildConfigField(STRING, "MARVEL_PUBLIC_KEY", marvelPublicKey)
@@ -51,11 +51,10 @@ kotlin {
         commonMain.dependencies {
             implementation(compose.runtime)
             implementation(compose.foundation)
-            implementation(compose.material)
+            implementation(compose.material3)
             implementation(compose.ui)
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
-            implementation(libs.androidx.navigation)
             implementation(libs.ktor.client.core)
             implementation(libs.ktor.client.cio)
             implementation(libs.ktor.client.logging)
@@ -69,6 +68,7 @@ kotlin {
             implementation(libs.okio)
             implementation(libs.kotlin.crypto)
             implementation(libs.cupertino)
+            implementation(libs.androidx.navigation.compose)
         }
         androidMain.dependencies {
             implementation(compose.preview)
@@ -80,6 +80,8 @@ kotlin {
             implementation(libs.ktor.client.darwin)
         }
     }
+
+    task("testClasses")
 }
 
 android {

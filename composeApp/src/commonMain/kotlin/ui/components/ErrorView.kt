@@ -5,18 +5,19 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.Button
-import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.DateRange
+import androidx.compose.material3.Button
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import marveldemo.composeapp.generated.resources.Res
+import marveldemo.composeapp.generated.resources.retry
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun ErrorView(text: String, onClick: () -> Unit) {
@@ -42,7 +43,7 @@ fun ErrorView(text: String, onClick: () -> Unit) {
             onClick = onClick,
             modifier = Modifier.padding(16.dp),
         ) {
-            Text(text = "Retry")
+            Text(text = stringResource(Res.string.retry))
         }
     }
 }
