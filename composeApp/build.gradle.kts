@@ -69,12 +69,14 @@ kotlin {
             implementation(libs.kotlin.crypto)
             implementation(libs.cupertino)
             implementation(libs.androidx.navigation.compose)
+            implementation(libs.splash)
         }
         androidMain.dependencies {
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
             implementation(libs.ktor.client.okhttp)
             implementation(libs.kotlinx.coroutines.android)
+            implementation(libs.material.components)
         }
         iosMain.dependencies {
             implementation(libs.ktor.client.darwin)
