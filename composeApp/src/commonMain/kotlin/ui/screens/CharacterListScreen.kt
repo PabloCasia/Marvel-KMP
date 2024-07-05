@@ -26,19 +26,21 @@ fun CharacterListScreen(onCharacterClick: (Int) -> Unit) {
 
         is CharacterListViewModel.CharacterListScreenState.Success -> {
             val characters =
-                (comicListScreenState as CharacterListViewModel.CharacterListScreenState.Success).responseData.data.results
-            CharacterList(
-                characters = characters.map { it.toCharacter() },
-                onCharacterClick = { id ->
-                    onCharacterClick(id)
-                },
-                loadMoreItems = { index ->
-                    if (index == characters.size - 1) {
-                        viewModel.getCharacters(index + 1, 20)
-                    }
-                },
-                isLoading = isLoading
-            )
+                (comicListScreenState as CharacterListViewModel.CharacterListScreenState.Success).responseData.data?.results
+            characters?.map { it.toCharacter() }?.let {
+                CharacterList(
+                    characters = it,
+                    onCharacterClick = { id ->
+                        onCharacterClick(id)
+                    },
+                    loadMoreItems = { index ->
+                        if (index == characters.size - 1) {
+                            viewModel.getCharacters(index + 1, 20)
+                        }
+                    },
+                    isLoading = isLoading
+                )
+            }
         }
 
         is CharacterListViewModel.CharacterListScreenState.Error -> {

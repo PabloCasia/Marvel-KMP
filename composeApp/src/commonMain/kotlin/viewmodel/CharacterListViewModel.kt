@@ -39,7 +39,7 @@ class CharacterListViewModel(private val characterRepository: CharacterRepositor
                                 val newData = response.data?.data?.results ?: emptyList()
                                 val combinedData = oldData + newData
                                 val combinedResponse =
-                                    response.data?.copy(data = response.data.data.copy(results = combinedData))
+                                    response.data?.copy(data = response.data.data?.copy(results = combinedData))
                                 currentState.copy(
                                     errorMessage = "",
                                     responseData = combinedResponse
