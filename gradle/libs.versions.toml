@@ -24,7 +24,7 @@ okio = "3.9.0"
 kotlin-crypto = "0.5.1"
 androidx-navigation = "2.8.0-alpha02"
 buildKonfig = "0.15.1"
-material = "1.4.0"
+material = "1.12.0"
 splash = "1.0.1"
 
 [libraries]
